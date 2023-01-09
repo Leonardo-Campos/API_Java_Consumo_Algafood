@@ -1,7 +1,10 @@
 package com.algaworks.algafood.client.api;
 
+import com.algaworks.algafood.client.model.RestauranteModel;
 import com.algaworks.algafood.client.model.RestauranteResumoModel;
+import com.algaworks.algafood.client.model.input.RestauranteInput;
 import lombok.AllArgsConstructor;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,7 +34,16 @@ public class RestauranteClient {
         }catch (RestClientResponseException e) {
             throw new ClientApiException(e.getMessage(), e);
         }
+    }
 
+    public RestauranteModel adicionar(RestauranteInput restaurante) {
+        var resourceUri = URI.create(url + RESOURCE_PATH);
 
+        try {
+            return restTemplate
+                    .postForObject(resourceUri, restaurante, RestauranteModel.class);
+        } catch (HttpClientErrorException e) {
+            throw new ClientApiException(e.getMessage(), e);
+        }
     }
 }
